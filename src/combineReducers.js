@@ -136,14 +136,16 @@ export default function combineReducers(reducers) {
   }
 
   let shapeAssertionError
-  try {
-    assertReducerShape(finalReducers)
-  } catch (e) {
-    shapeAssertionError = e
+  if (process.env.NODE_ENV !== 'production') {
+    try {
+      assertReducerShape(finalReducers)
+    } catch (e) {
+      shapeAssertionError = e
+    }
   }
 
   return function combination(state = {}, action) {
-    if (shapeAssertionError) {
+    if (process.env.NODE_ENV !== 'production' && shapeAssertionError) {
       throw shapeAssertionError
     }
 

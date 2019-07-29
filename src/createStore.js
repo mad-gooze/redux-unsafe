@@ -29,15 +29,18 @@ import isPlainObject from './utils/isPlainObject'
  * and subscribe to changes.
  */
 export default function createStore(reducer, preloadedState, enhancer) {
-  if (
-    (typeof preloadedState === 'function' && typeof enhancer === 'function') ||
-    (typeof enhancer === 'function' && typeof arguments[3] === 'function')
-  ) {
-    throw new Error(
-      'It looks like you are passing several store enhancers to ' +
-        'createStore(). This is not supported. Instead, compose them ' +
-        'together to a single function.'
-    )
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      (typeof preloadedState === 'function' &&
+        typeof enhancer === 'function') ||
+      (typeof enhancer === 'function' && typeof arguments[3] === 'function')
+    ) {
+      throw new Error(
+        'It looks like you are passing several store enhancers to ' +
+          'createStore(). This is not supported. Instead, compose them ' +
+          'together to a single function.'
+      )
+    }
   }
 
   if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
@@ -46,14 +49,17 @@ export default function createStore(reducer, preloadedState, enhancer) {
   }
 
   if (typeof enhancer !== 'undefined') {
-    if (typeof enhancer !== 'function') {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      typeof enhancer !== 'function'
+    ) {
       throw new Error('Expected the enhancer to be a function.')
     }
 
     return enhancer(createStore)(reducer, preloadedState)
   }
 
-  if (typeof reducer !== 'function') {
+  if (process.env.NODE_ENV !== 'production' && typeof reducer !== 'function') {
     throw new Error('Expected the reducer to be a function.')
   }
 
@@ -82,7 +88,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * @returns {any} The current state tree of your application.
    */
   function getState() {
-    if (isDispatching) {
+    if (process.env.NODE_ENV !== 'production' && isDispatching) {
       throw new Error(
         'You may not call store.getState() while the reducer is executing. ' +
           'The reducer has already received the state as an argument. ' +
@@ -117,11 +123,14 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * @returns {Function} A function to remove this change listener.
    */
   function subscribe(listener) {
-    if (typeof listener !== 'function') {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      typeof listener !== 'function'
+    ) {
       throw new Error('Expected the listener to be a function.')
     }
 
-    if (isDispatching) {
+    if (process.env.NODE_ENV !== 'production' && isDispatching) {
       throw new Error(
         'You may not call store.subscribe() while the reducer is executing. ' +
           'If you would like to be notified after the store has been updated, subscribe from a ' +
@@ -140,7 +149,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
         return
       }
 
-      if (isDispatching) {
+      if (process.env.NODE_ENV !== 'production' && isDispatching) {
         throw new Error(
           'You may not unsubscribe from a store listener while the reducer is executing. ' +
             'See https://redux.js.org/api-reference/store#subscribe(listener) for more details.'
@@ -182,21 +191,24 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * return something else (for example, a Promise you can await).
    */
   function dispatch(action) {
-    if (!isPlainObject(action)) {
+    if (process.env.NODE_ENV !== 'production' && !isPlainObject(action)) {
       throw new Error(
         'Actions must be plain objects. ' +
           'Use custom middleware for async actions.'
       )
     }
 
-    if (typeof action.type === 'undefined') {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      typeof action.type === 'undefined'
+    ) {
       throw new Error(
         'Actions may not have an undefined "type" property. ' +
           'Have you misspelled a constant?'
       )
     }
 
-    if (isDispatching) {
+    if (process.env.NODE_ENV !== 'production' && isDispatching) {
       throw new Error('Reducers may not dispatch actions.')
     }
 
@@ -227,7 +239,10 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * @returns {void}
    */
   function replaceReducer(nextReducer) {
-    if (typeof nextReducer !== 'function') {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      typeof nextReducer !== 'function'
+    ) {
       throw new Error('Expected the nextReducer to be a function.')
     }
 
@@ -258,7 +273,11 @@ export default function createStore(reducer, preloadedState, enhancer) {
        * emission of values from the observable.
        */
       subscribe(observer) {
-        if (typeof observer !== 'object' || observer === null) {
+        if (
+          (process.env.NODE_ENV !== 'production' &&
+            typeof observer !== 'object') ||
+          observer === null
+        ) {
           throw new TypeError('Expected the observer to be an object.')
         }
 
