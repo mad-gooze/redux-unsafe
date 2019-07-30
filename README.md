@@ -1,5 +1,7 @@
 # <a href='http://redux.js.org'><img src='https://camo.githubusercontent.com/f28b5bc7822f1b7bb28a96d8d09e7d79169248fc/687474703a2f2f692e696d6775722e636f6d2f4a65567164514d2e706e67' height='60' alt='Redux Logo' aria-label='redux.js.org' /></a>
 
+**This is a fork of redux with error logs disabled in production build. See the [discussion](https://github.com/reduxjs/redux/issues/3391)**
+
 Redux is a predictable state container for JavaScript apps.  
 (Not to be confused with a WordPress framework – [Redux Framework](https://reduxframework.com/).)
 
