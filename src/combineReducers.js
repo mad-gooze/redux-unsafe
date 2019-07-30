@@ -168,7 +168,10 @@ export default function combineReducers(reducers) {
       const reducer = finalReducers[key]
       const previousStateForKey = state[key]
       const nextStateForKey = reducer(previousStateForKey, action)
-      if (typeof nextStateForKey === 'undefined') {
+      if (
+        process.env.NODE_ENV !== 'production' &&
+        typeof nextStateForKey === 'undefined'
+      ) {
         const errorMessage = getUndefinedStateErrorMessage(key, action)
         throw new Error(errorMessage)
       }
