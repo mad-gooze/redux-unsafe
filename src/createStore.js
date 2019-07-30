@@ -273,12 +273,10 @@ export default function createStore(reducer, preloadedState, enhancer) {
        * emission of values from the observable.
        */
       subscribe(observer) {
-        if (
-          (process.env.NODE_ENV !== 'production' &&
-            typeof observer !== 'object') ||
-          observer === null
-        ) {
-          throw new TypeError('Expected the observer to be an object.')
+        if (process.env.NODE_ENV !== 'production') {
+          if (typeof observer !== 'object' || observer === null) {
+            throw new TypeError('Expected the observer to be an object.')
+          }
         }
 
         function observeState() {
